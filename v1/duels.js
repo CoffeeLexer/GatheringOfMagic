@@ -1,20 +1,22 @@
 const express = require("express")
-const db = require("../db")
+const db = require("../db");
 
 const router = express.Router()
 
 router.get(/\/\d+/, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
-    let result = await db.query(`select * from view_tournament_full where id = '${id}'`)
+    let result = await db.query(`select * from view_duel where id = '${id}'`)
     result.forEach((e, i, arr) => {
-        arr[i].duels = JSON.parse(e.duels.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].tournament = JSON.parse(e.tournament)
+        arr[i].decks = JSON.parse(e.decks.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
     })
-    res.json(result)
+    res.status(200).json(result)
 })
 router.get(/\//, async (req, res) => {
-    let result = await db.query(`select * from view_tournament_full`)
+    let result = await db.query(`select * from view_duel limit 100`)
     result.forEach((e, i, arr) => {
-        arr[i].duels = JSON.parse(e.duels.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].tournament = JSON.parse(e.tournament)
+        arr[i].decks = JSON.parse(e.decks.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
     })
     res.status(200).json(result)
 })
