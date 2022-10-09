@@ -46,7 +46,7 @@ router.patch(/\/\d+/, async (req, res) => {
     if(req.body.location) {
         await db.query(`update tournament set location = '${req.body.location}' where id = '${id}'`)
     }
-    return res.status(203).send(null)
+    return res.status(204).send(null)
 })
 router.delete(/\/\d+/, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
