@@ -141,12 +141,12 @@ router.patch(/\/\d+/, async (req, res) => {
         await db.query(`delete from duel_deck where fk_duel = '${id}'`)
         await db.query(`insert into duel_deck(fk_duel, fk_deck) values ('${id}', '${req.body.decks[0]}'), ('${id}', '${req.body.decks[1]}')`)
     }
-    return res.status(203).send(null)
+    return res.status(204).send(null)
 })
 router.delete(/\/\d+/, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
     await db.query(`delete from duel where id = '${id}'`)
-    return res.status(203).send(null)
+    return res.status(204).send(null)
 })
 
 module.exports = router
