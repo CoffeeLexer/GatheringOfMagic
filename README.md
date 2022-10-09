@@ -1,9 +1,8 @@
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/25423296/163456776-7f95b81a-f1ed-45f7-b7ab-8fa810d529fa.png">
-        <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
-        <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">    
-        <img style="margin-left: auto; margin-right: auto" width="150" src="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/79b34fca443e90f6c106d625ea09b5330f53f09c/docs/KTU.png" alt="KTU LOGO">
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/KTU%20white.png">
+        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/KTU%20black.png">
+        <img width="50%" alt="KTU LOGO" src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
     </picture>
 </p>
 
