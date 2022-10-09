@@ -8,8 +8,55 @@
 
 # Informatics Faculty
 ### T120B165 Web Application Design
-#### Project Gathering Of Magic
-This projects mission is to create website for MTG enthusiasts for an easy way to create tournaments and optimal way to construct decks
+### Project Gathering Of Magic
+#### Purpose of the system
+Project has in ming for creating system to organise "Magic The Gathering" (MTG) tournaments and easy environment
+for deck building
+#### Non-Formal Specification
+Data is saved in database. For creation and modification of data Application Programming Interface (API) is used.
+Majority of data is stored in our predefined database. However, card information is gathered from 3rd party API.
+For user to access system, internet browser of choice is used.
+
+MTG player to enter tournament must register to system. Registered user can register to tournament and create decks.
+Administrator is actor who creates before mentioned tournaments, outlines duels inside tournaments and declares winners.
+Player can construct decks and enter them into tournaments to duel other players. Guests can inspect entire system while
+players can create/modify decks and administrator creates/modifies tournaments.
+#### Functional Specification
+- Guest can
+  - Read card list
+  - Read single cards information
+  - Read deck list
+  - Read singe decks information
+  - Read tournaments list
+  - Read single tournaments information
+- Player can
+  - Do everything as guest
+  - Create deck
+  - Modify his deck
+  - Delete his deck
+- Administrator can
+  - Do everything as player
+  - Create tournament
+  - Modify tournament
+  - Delete tournament
+  - Create duel
+  - Modify duel
+  - Delete duel
+## Technological specification
+System consist of
+- Front-End - generated raw html from server
+- Back-End - Node.js
+- Database - MySQL
+- MTG card API - https://api.magicthegathering.io
+
+For deploying system you must use architecture provided bellow. For publishing cloud servers are used. Database can be
+separate, but is recommended to store them together as APIs server for faster communication speed between database and
+API. To access system you need to use interned browser and server will return raw HTML.
+<p align="center">
+    <picture>
+        <img width="50%" alt="Architectures structure" src="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/Architecture.png">
+    </picture>
+</p>
 
 # `/cards`
   - `GET`
