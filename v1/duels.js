@@ -33,6 +33,7 @@ router.post(/\//, async (req, res) => {
     test = utilities.array_test(req.body.decks, "decks", /[0-9]+/)
     if(test) return res.status(400).json({error: `${test} don't match required data type!`})
     if(req.body.decks.length !== 2) return res.status(403).json({error: `In duel only 2 decks fight (provided: ${req.body.decks.length})`})
+    if(req.body.decks[0] == req.body.decks[1]) return res.status(403).json({error: `Deck can't play against itself`})
     let result = await db.query(`select * from tournament where id = '${req.body.tournament}'`)
     if(result.length === 0) return res.status(404).json({error: `Tournament id: '${req.body.tournament}' not found`})
     if(req.body.winner) {
@@ -47,6 +48,13 @@ router.post(/\//, async (req, res) => {
     }
     if(bad_ids.length !== 0) {
         return res.status(404).json({error: `Not found decks id/ids: ${bad_ids.join(', ')}`})
+    }
+    {
+        let result = await db.query(`select * from deck where id = '${req.body.decks[0]}'`)
+        let owner_1 = result[0].fk_user
+        result = await db.query(`select * from deck where id = '${req.body.decks[1]}'`)
+        let owner_2 = result[0].fk_user
+        if(owner_1 == owner_2) return res.status(403).json({error: `Player can't duel against itself!`})
     }
     if(req.body.winner) {
         result = await db.query(`insert into duel(fk_deck_winner, fk_tournament) value ('${req.body.winner}', '${req.body.tournament}')`)
@@ -85,6 +93,14 @@ router.patch(/\/\d+/, async (req, res) => {
         if(bad_ids.length !== 0) {
             return res.status(404).json({json :`Not found decks id/ids: ${bad_ids.join(', ')}`})
         }
+        if(req.body.decks[0] == req.body.decks[1]) return res.status(403).json({error: `Deck can't play against itself`})
+        {
+            let result = await db.query(`select * from deck where id = '${req.body.decks[0]}'`)
+            let owner_1 = result[0].fk_user
+            result = await db.query(`select * from deck where id = '${req.body.decks[1]}'`)
+            let owner_2 = result[0].fk_user
+            if(owner_1 == owner_2) return res.status(403).json({error: `Player can't duel against itself!`})
+        }
         if(!req.body.decks.includes(req.body.winner)) return res.status(403).json({error: `Winner must be selection from 'DECKS'`})
         await db.query(`delete from duel_deck where fk_duel = '${id}'`)
         await db.query(`insert into duel_deck(fk_duel, fk_deck) values ('${id}', '${req.body.decks[0]}'), ('${id}', '${req.body.decks[1]}')`)
@@ -112,6 +128,14 @@ router.patch(/\/\d+/, async (req, res) => {
         }
         if(bad_ids.length !== 0) {
             return res.status(404).json({json :`Not found decks id/ids: ${bad_ids.join(', ')}`})
+        }
+        if(req.body.decks[0] == req.body.decks[1]) return res.status(403).json({error: `Deck can't play against itself`})
+        {
+            let result = await db.query(`select * from deck where id = '${req.body.decks[0]}'`)
+            let owner_1 = result[0].fk_user
+            result = await db.query(`select * from deck where id = '${req.body.decks[1]}'`)
+            let owner_2 = result[0].fk_user
+            if(owner_1 == owner_2) return res.status(403).json({error: `Player can't duel against itself!`})
         }
         if(!req.body.decks.includes(current_winner)) return res.status(403).json({error: `Winner must be selection from 'DECKS'`})
         await db.query(`delete from duel_deck where fk_duel = '${id}'`)

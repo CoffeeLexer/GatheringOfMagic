@@ -35,6 +35,7 @@ router.post(/\//, async (req, res) => {
         return res.status(404).json({error: `User ${req.body.owner} not found!`})
     }
     let owner_id = result[0].id
+    if(req.body.cards.length < 60) return res.status(403).json({error: `Deck must consist at least 60 cards (provided: ${req.body.cards.length})`})
     try {
         result = await db.query(`insert into deck(name, fk_user) value ('${req.body.name}', '${owner_id}')`)
     }
@@ -103,6 +104,7 @@ router.patch(/\/\d+/, async (req, res) => {
             }
         })
         if(max > max_card || min < 0) return res.status(400).json({error: `Card ids are out of rande 0 <= id <= ${max_card}`})
+        if(req.body.cards.length < 60) return res.status(403).json({error: `Deck must consist at least 60 cards (provided: ${req.body.cards.length})`})
         let sql
         req.body.cards.forEach((e, i, arr) => {
             if(i === 0) {
