@@ -15,8 +15,9 @@ async function download() {
                 let sql = ""
                 for(let j = 0; j < cards.length; j++) {
                     let id = i * 100 + j
-                    cards[j].foreignNames = null
-                    let content = JSON.stringify(cards[j]).replace(/'/g, '%1').replace(/"/g, '%2')
+                    cards[j].foreignNames = undefined;
+                    cards[j].rulings = undefined;
+                    let content = Buffer.from(JSON.stringify(cards[j])).toString('base64')
                     if(j === 0) {
                         sql += `insert ignore into card(id, content) values ('${id}', '${content}')`
                     }
@@ -29,7 +30,7 @@ async function download() {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
 }
-// download()
+//download()
 
 app.use('/api/v1', require('./v1/master'))
 

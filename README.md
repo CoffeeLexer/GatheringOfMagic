@@ -58,21 +58,26 @@ API. To access system you need to use interned browser and server will return ra
     </picture>
 </p>
 
+# Hierarchy
+- `Guest` can access only `GET` methods
+- Registered `Guest` is `User` and can do as much as `Guest` and modify `Decks`
+- `Admin` is `User` with higher privilege level and can do as much as `User` and organiser tournaments, create/modify duels
+
 # `/cards`
-  - `GET`
+  - `GET` `Guest`
     - `200`
       - Returns card list (default `GET` params: page = 1, pageSize = 10)
 # `/cards/id`
-  - `GET`
+  - `GET` `Guest`
     - `200`
       - Returns card with specific **id**
     - `404`
       - Card with provided **id** was not found
 # `/decks`
-  - `GET`
+  - `GET` `Guest`
     - `200`
       - Returns deck list (default `GET` params: page = 1, pageSize = 10)
-  - `POST`
+  - `POST` `User`
     - `201`
       - Success. Header Location has redirection to created resource
     - `400`
@@ -88,18 +93,17 @@ API. To access system you need to use interned browser and server will return ra
     ```
     {
         "name": "Storm From Within8",
-        "owner": "Master",
         "cards": [
             960 ,961 ,962 ,963 ,964 ,965 ,966 ,967 ,968 ,969 ,970 ,971 ,972 ,973 ,974 ,975 ,976 ,977 ,978 ,979 ,980 ,981 ,982 ,983 ,984 ,985 ,986 ,987 ,988 ,989 ,990 ,991 ,992 ,993 ,994 ,995 ,996 ,997 ,998 ,999 ,1000 ,1001 ,1002 ,1003 ,1004 ,1005 ,1006 ,1007 ,1008 ,1009 ,1010 ,1011 ,1012 ,1013 ,1014 ,1015 ,1016 ,1017 ,1018 ,1019 ,1020 ,1021 ,1022 ,1023 ,1024 ,1025 ,1026 ,1027 ,1028 ,1029 ,1030 ,1031 ,1032 ,1033 ,1034 ,1035 ,1036 ,1037 ,1038 ,1039 ,1040 ,1041 ,1042 ,1043 ,1044 ,1045 ,1046 ,1047 ,1048 ,1049 ,1050 ,1051 ,1052 ,1053 ,1054 ,1055 ,1056 ,1057 ,1058 ,1059 ,1060 ,1061 ,1062 ,1063 ,1064 ,1065 ,1066 ,1067 ,1068 ,1069 ,1070 ,1071 ,1072 ,1073 ,1074 ,1075 ,1076 ,1077 ,1078 ,1079
         ]
     }
 # `/decks/id`
-  - `GET`
+  - `GET` `Guest`
     - `200`
       - Returns deck with specific **id**
     - `404`
       - Resource not found
-  - `PATCH`
+  - `PATCH` `User`
     - `204` 
       - Success. Does not have body
     - `400`
@@ -114,23 +118,22 @@ API. To access system you need to use interned browser and server will return ra
     - `PATCH` example body
     ```
     {
-        "owner": "Master",
         "name": "Fiery Hail",
         "cards": [
             960 ,961 ,962 ,963 ,964 ,965 ,966 ,967 ,968 ,969 ,970 ,971 ,972 ,973 ,974 ,975 ,976 ,977 ,978 ,979 ,980 ,981 ,982 ,983 ,984 ,985 ,986 ,987 ,988 ,989 ,990 ,991 ,992 ,993 ,994 ,995 ,996 ,997 ,998 ,999 ,1000 ,1001 ,1002 ,1003 ,1004 ,1005 ,1006 ,1007 ,1008 ,1009 ,1010 ,1011 ,1012 ,1013 ,1014 ,1015 ,1016 ,1017 ,1018 ,1019 ,1020 ,1021 ,1022 ,1023 ,1024 ,1025 ,1026 ,1027 ,1028 ,1029 ,1030 ,1031 ,1032 ,1033 ,1034 ,1035 ,1036 ,1037 ,1038 ,1039 ,1040 ,1041 ,1042 ,1043 ,1044 ,1045 ,1046 ,1047 ,1048 ,1049 ,1050 ,1051 ,1052 ,1053 ,1054 ,1055 ,1056 ,1057 ,1058 ,1059 ,1060 ,1061 ,1062 ,1063 ,1064 ,1065 ,1066 ,1067 ,1068 ,1069 ,1070 ,1071 ,1072 ,1073 ,1074 ,1075 ,1076 ,1077 ,1078 ,1079
         ]
     }
-  - `DELETE`
+  - `DELETE` `User`
     - `204`
         - Success. Does not have body
     - `403`
       - Deck already used in tournament CAN NOT be deleted
 
 # `/duels`
-- `GET`
+- `GET` `Guest`
     - `200`
         - Returns duel list (default `GET` params: page = 1, pageSize = 10)
-- `POST`
+- `POST` `Admin`
     - `201`
         - Success. Header Location has redirection to created resource
     - `400`
@@ -153,12 +156,12 @@ API. To access system you need to use interned browser and server will return ra
      "decks": [37, 34]
   }
 # `/duels/id`
-- `GET`
+- `GET` `Guest`
     - `200`
       - Returns duel with specific **id**
     - `404`
       - Resource not found
-- `PATCH`
+- `PATCH` `Admin`
     - `204`
       - Success. Does not have body
     - `400`
@@ -180,16 +183,16 @@ API. To access system you need to use interned browser and server will return ra
      "winner": 2,
      "decks": [2, 5]
   }
-- `DELETE`
+- `DELETE` `Admin`
     - `204`
         - Success. Does not have body
 
 
 # `/tournaments`
-- `GET`
+- `GET` `Guest`
     - `200`
         - Returns tournament list (default `GET` params: page = 1, pageSize = 10)
-- `POST`
+- `POST` `Admin`
     - `201`
         - Success. Header Location has redirection to created resource
     - `400`
@@ -199,16 +202,15 @@ API. To access system you need to use interned browser and server will return ra
     - `POST` example body
   ```
   {
-      "organiser": "Master",
       "location": "Antano Antanausko Gaming Lobby"
   }
 # `/tournaments/id`
-- `GET`
+- `GET` `Guest`
     - `200`
         - Returns duel with specific **id**
     - `404`
         - Resource not found
-- `PATCH`
+- `PATCH` `Admin`
     - `204`
       - Success. Does not have body
     - `404`
@@ -217,10 +219,9 @@ API. To access system you need to use interned browser and server will return ra
     - `PATCH` example body
   ```
   {
-      "organiser": "Master",
       "location": "Antano Antanausko Gaming Lobby"
   }
-- `DELETE`
+- `DELETE` `Admin`
     - `204`
       - Success. Does not have body
     - `403`

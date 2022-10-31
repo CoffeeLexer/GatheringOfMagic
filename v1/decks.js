@@ -5,43 +5,45 @@ const url = require('url')
 
 const router = express.Router()
 
+//  Public access
 router.get(/\/\d+/, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
-    let result = await db.query(`select * from view_deck where id = '${id}'`)
+    let result = await db.query(`select * from view_deck_final where id = '${id}'`)
     if(result.length === 0) return res.status(404).json({"error": `Not found`})
     result.forEach((e, i, arr) => {
-        arr[i].cards = JSON.parse(`[${e.cards}]`.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].cards = JSON.parse(e.cards)
     })
     res.status(200).json(result[0])
 })
+
+// Public access
 router.get(/\//, async (req, res) => {
     const parsed_url = new URL("http://localhost" + req.originalUrl)
     const params = parsed_url.searchParams
     const page = params.get('page') && params.get('page') > 0 ? params.get('page') : 1
     const pageSize = params.get('pageSize') && params.get('pageSize') > 0 ? params.get('pageSize') : 10
-    let result = await db.query(`select * from view_deck limit ${pageSize} offset ${(page - 1) * pageSize}`)
+    let result = await db.query(`select * from view_deck_final limit ${pageSize} offset ${(page - 1) * pageSize}`)
     result.forEach((e, i, arr) => {
-        arr[i].cards = JSON.parse(`[${e.cards}]`.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].cards = JSON.parse(e.cards)
     })
     res.status(200).json(result)
 })
-router.post(/\//, async (req, res) => {
-    let test = utilities.structure_test(req.body, ["name", "owner", "cards"])
+
+//  User access
+router.post(/\//, utilities.verifyToken, async (req, res) => {
+    let test = utilities.structure_test(req.body, ["name", "cards"])
     if(test) return res.status(400).json({error: `Missing fields: ${test}`})
     test = utilities.array_test(req.body.cards, "cards", /[0-9]+/)
     if(test) return res.status(400).json({error: `${test} don't match required data type!`})
-    let result = await db.query(`select id from user where username = '${req.body.owner}'`)
-    if(result.length === 0) {
-        return res.status(404).json({error: `User ${req.body.owner} not found!`})
-    }
-    let owner_id = result[0].id
+    let result
+    let owner_id = req.user.id
     if(req.body.cards.length < 60) return res.status(403).json({error: `Deck must consist at least 60 cards (provided: ${req.body.cards.length})`})
     try {
         result = await db.query(`insert into deck(name, fk_user) value ('${req.body.name}', '${owner_id}')`)
     }
     catch (e) {
         if(e.code === 'ER_DUP_ENTRY') {
-            return res.status(403).json({error: `User '${req.body.owner}' already has deck named '${req.body.name}'`})
+            return res.status(403).json({error: `User '${req.user.username}' already has deck named '${req.body.name}'`})
         }
         else {
             console.error(e)
@@ -67,15 +69,13 @@ router.post(/\//, async (req, res) => {
     res.setHeader(`Location`, `${req.protocol}://${req.get('host')}${req.originalUrl}${deck_id}`)
     return res.status(201).send(null)
 })
-router.patch(/\/\d+/, async (req, res) => {
+
+// User access
+router.patch(/\/\d+/, utilities.verifyToken, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
     let result = await db.query(`select * from deck where id = '${id}'`)
     if(result.length === 0) return res.status(404).json({error: `Deck not found!`})
-    if(req.body.owner) {
-        let result = await db.query(`select id from user where username = '${req.body.owner}'`)
-        if(result.length === 0) return res.status(404).json({error: `User ${req.body.owner} not found!`})
-        await db.query(`update deck set fk_user = '${result[0].id}' where id = '${id}'`)
-    }
+    if(result[0].fk_user !== req.user.id) return res.status(403).json({error: `Modifying not personal deck`})
     if(req.body.name) {
         try {
             await db.query(`update deck set name = '${req.body.name}' where id = '${id}'`)
@@ -104,7 +104,7 @@ router.patch(/\/\d+/, async (req, res) => {
             }
         })
         if(max > max_card || min < 0) return res.status(400).json({error: `Card ids are out of rande 0 <= id <= ${max_card}`})
-        if(req.body.cards.length < 60) return res.status(403).json({error: `Deck must consist at least 60 cards (provided: ${req.body.cards.length})`})
+        if(req.body.cards.length < 60) return res.status(405).json({error: `Deck must consist at least 60 cards (provided: ${req.body.cards.length})`})
         let sql
         req.body.cards.forEach((e, i, arr) => {
             if(i === 0) {
@@ -119,10 +119,15 @@ router.patch(/\/\d+/, async (req, res) => {
     }
     return res.status(204).send(null)
 })
-router.delete(/\/\d+/, async (req, res) => {
+
+// User access
+router.delete(/\/\d+/, utilities.verifyToken, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
+    let result = await db.query(`select * from deck where id = '${id}'`)
+    if(result.length === 0) return res.status(400).json({error: `Deck not found`})
+    if(result[0].fk_user !== req.user.id) return res.status(403).json({error: `User does NOT own this deck!`})
     try {
-        await db.query(`delete from deck where id = '${id}'`)
+        result = await db.query(`delete from deck where id = '${id}'`)
     }
     catch (e) {
         if(e.code === 'ER_ROW_IS_REFERENCED_2') {

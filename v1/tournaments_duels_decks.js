@@ -9,16 +9,17 @@ router.get(/\/\d+\/duels\/\d+\/decks\/\d+/, async (req, res) => {
     let tournament_id = split[1]
     let duel_id = split[3]
     let id = split[5]
-    let result = await db.query(`select * from view_tournament_full where id = '${tournament_id}'`)
+    let result = await db.query(`select * from tournament where id = '${tournament_id}'`)
     if(result.length === 0) return res.status(404).json({"error": `Tournament not found`})
+    result = await db.query(`select * from view_duel_final where tournament = '${tournament_id}' and id = '${duel_id}'`)
+    if(result.length === 0) return res.status(404).json({error: `Duel not found`})
+    let decks = JSON.parse(result[0].decks)
+    if(!decks.includes(parseInt(id))) return res.status(404).json({error: `Deck not found!`})
+    result = await db.query(`select * from view_deck_final where id = '${id}'`)
     result.forEach((e, i, arr) => {
-        arr[i].duels = JSON.parse(e.duels.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].cards = JSON.parse(e.cards)
     })
-    let duels = result[0].duels
-    if(duels.length <= duel_id) return res.status(403).json({error:`Duel id out of range 0 <= id <= ${duels.length}`})
-    let decks = duels[duel_id].decks
-    if(decks.length <= id) return res.status(403).json({error:`Deck id out of range 0 <= id <= ${decks.length}`})
-    return res.status(200).json(decks[id])
+    return res.status(200).json(result[0])
 })
 router.get(/\/\d+\/duels\/\d+\/decks/, async (req, res) => {
     const parsed_url = new URL("http://localhost" + req.originalUrl)
@@ -28,15 +29,16 @@ router.get(/\/\d+\/duels\/\d+\/decks/, async (req, res) => {
     let split = req.url.split('/')
     let tournament_id = split[1]
     let duel_id = split[3]
-    let result = await db.query(`select * from view_tournament_full where id = '${tournament_id}'`)
+    let result = await db.query(`select * from tournament where id = '${tournament_id}'`)
     if(result.length === 0) return res.status(404).json({"error": `Tournament not found`})
+    result = await db.query(`select * from view_duel_final where tournament = '${tournament_id}' and id = '${duel_id}'`)
+    if(result.length === 0) return res.status(404).json({error: `Duel not found`})
+    let decks = JSON.parse(result[0].decks)
+    result = await db.query(`select * from view_deck_final where id = '${decks[0]}' or id = '${decks[1]}'`)
     result.forEach((e, i, arr) => {
-        arr[i].duels = JSON.parse(e.duels.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].cards = JSON.parse(e.cards)
     })
-    let duels = result[0].duels
-    if(duels.length <= duel_id) return res.status(403).json(`Duel id out of range 0 <= id <= ${duels.length}`)
-    let decks = duels[duel_id].decks
-    return res.status(200).json(decks.slice((page - 1) * pageSize, page * pageSize))
+    return res.status(200).json(result)
 })
 
 module.exports = router

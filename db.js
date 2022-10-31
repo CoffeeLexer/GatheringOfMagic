@@ -1,11 +1,12 @@
+require('dotenv').config();
 const mysql = require('mysql')
 
 var pool = mysql.createPool({
     connectionLimit:4,
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "magic"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DATABASE
 })
 
 module.exports.query = async (sql) => {

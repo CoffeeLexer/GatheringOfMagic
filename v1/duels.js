@@ -5,36 +5,41 @@ const url = require('url')
 
 const router = express.Router()
 
+
+//  Public access
 router.get(/\/\d+/, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
-    let result = await db.query(`select * from view_duel where id = '${id}'`)
+    let result = await db.query(`select * from view_duel_final where id = '${id}'`)
     if(result.length === 0) return res.status(404).json({error: "Not found"})
     result.forEach((e, i, arr) => {
-        arr[i].tournament = JSON.parse(e.tournament)
-        arr[i].decks = JSON.parse(e.decks.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].decks = JSON.parse(e.decks)
     })
     res.status(200).json(result[0])
 })
+
+// Public access
 router.get(/\//, async (req, res) => {
     const parsed_url = new URL("http://localhost" + req.originalUrl)
     const params = parsed_url.searchParams
     const page = params.get('page') && params.get('page') > 0 ? params.get('page') : 1
     const pageSize = params.get('pageSize') && params.get('pageSize') > 0 ? params.get('pageSize') : 10
-    let result = await db.query(`select * from view_duel limit ${pageSize} offset ${(page - 1) * pageSize}`)
+    let result = await db.query(`select * from view_duel_final limit ${pageSize} offset ${(page - 1) * pageSize}`)
     result.forEach((e, i, arr) => {
-        arr[i].tournament = JSON.parse(e.tournament)
-        arr[i].decks = JSON.parse(e.decks.replace(/%1/g, '\'').replace(/%2/g, '"').replace(/\n/g, ''))
+        arr[i].decks = JSON.parse(e.decks)
     })
     res.status(200).json(result)
 })
-router.post(/\//, async (req, res) => {
+
+// Admin access
+router.post(/\//, utilities.verifyToken, utilities.adminGuard, async (req, res) => {
     let test = utilities.structure_test(req.body, ["decks", "tournament"])
     if(test) return res.status(400).json({error: `Missing fields: ${test}`})
     test = utilities.array_test(req.body.decks, "decks", /[0-9]+/)
     if(test) return res.status(400).json({error: `${test} don't match required data type!`})
-    if(req.body.decks.length !== 2) return res.status(403).json({error: `In duel only 2 decks fight (provided: ${req.body.decks.length})`})
-    if(req.body.decks[0] == req.body.decks[1]) return res.status(403).json({error: `Deck can't play against itself`})
+    if(req.body.decks.length !== 2) return res.status(405).json({error: `In duel only 2 decks fight (provided: ${req.body.decks.length})`})
+    if(req.body.decks[0] == req.body.decks[1]) return res.status(405).json({error: `Deck can't play against itself`})
     let result = await db.query(`select * from tournament where id = '${req.body.tournament}'`)
+    if(result[0].fk_organiser !== req.user.id) return res.status(403).json({error: `No ownership of tournament!`})
     if(result.length === 0) return res.status(404).json({error: `Tournament id: '${req.body.tournament}' not found`})
     if(req.body.winner) {
         let result = await db.query(`select * from deck where id = '${req.body.winner}'`)
@@ -69,11 +74,17 @@ router.post(/\//, async (req, res) => {
     res.setHeader(`Location`, `${req.protocol}://${req.get('host')}${req.originalUrl}${id}`)
     return res.status(201).send(null)
 })
-router.patch(/\/\d+/, async (req, res) => {
+
+// Admin access
+router.patch(/\/\d+/, utilities.verifyToken, utilities.adminGuard, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
     let result = await db.query(`select * from duel where id = '${id}'`)
     if(result.length === 0) return res.status(404).json({error: 'Duel not found!'})
     let current_winner = result[0].fk_deck_winner
+
+    result = await db.query(`select * from tournament where id = '${result[0].fk_tournament}'`)
+    if(result[0].fk_organiser !== req.user.id) return res.status(403).json({error: `No ownership of duel`})
+
     if(req.body.tournament) {
         let result = await db.query(`select * from tournament where id = '${req.body.tournament}'`)
         if(result.length === 0) return res.status(404).json({error: `Tournament not found`})
@@ -143,9 +154,18 @@ router.patch(/\/\d+/, async (req, res) => {
     }
     return res.status(204).send(null)
 })
-router.delete(/\/\d+/, async (req, res) => {
+
+//  Admin access
+router.delete(/\/\d+/, utilities.verifyToken, utilities.adminGuard, async (req, res) => {
     let id = req.url.substring(req.url.indexOf('/') + 1)
+    let result = await db.query(`select * from duel where id = '${id}'`)
+    if(result.length === 0) return res.status(404).json({error: `Duel not found!`})
+
+    result = await db.query(`select * from tournament where id = '${result[0].fk_tournament}'`)
+    if(result[0].fk_organiser !== req.user.id) return res.status(403).json({error: `No ownership rights of duel!`})
+
     await db.query(`delete from duel where id = '${id}'`)
+
     return res.status(204).send(null)
 })
 
