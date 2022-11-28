@@ -3,14 +3,30 @@
     <% if(locals.error) { %>
         <p><%= error %></p>
     <% } %>
-    <form action="users" method="post">
-        <div class="login_container">
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
-            <br>
-            <labe for="password"><b>Password</b></labe>
-            <input type="password" placeholder="Enter Password" name="password" required><br>
-            <button type="submit">Register</button>
-        </div>
-    </form>
+    <div class="login_container">
+        <label for="username"><b>Username</b></label>
+        <input id="username" type="text" placeholder="Enter Username" name="username" required>
+        <br>
+        <labe for="password"><b>Password</b></labe>
+        <input id="password" type="password" placeholder="Enter Password" name="password" required><br>
+        <button onclick="post()">Register</button>
+    </div>
 </div>
+<script>
+    function post() {
+        const xhttp = new XMLHttpRequest()
+        xhttp.open("POST", "/api/v1/users/", true)
+        xhttp.setRequestHeader("Content-Type", "application/json")
+        xhttp.onload = function() {
+            if(this.status !== 201) return alert(JSON.parse(this.responseText).error)
+            else {
+                window.location = '/sessions'
+            }
+        }
+        let body = {}
+        body.username = document.getElementById('username').value
+        body.password = document.getElementById('password').value
+        if(!body.password || !body.username) return alert('Required fields are not filed!')
+        xhttp.send(JSON.stringify(body))
+    }
+</script>
