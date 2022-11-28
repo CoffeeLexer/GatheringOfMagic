@@ -1,0 +1,45 @@
+<div class="content justify">
+
+    <p><%=deck.ownerName%> - <%=deck.name%></p>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Cost</th>
+        </tr>
+
+        <%deck.cards.forEach((e, i, arr) => {%>
+        <tr onclick="window.location='/cards/<%=e.id%>'" style="border-bottom: #111111 solid 1px; cursor: pointer">
+
+            <td><%=e.card.name%></td>
+            <td><%=e.card.type%></td>
+            <td><%=e.card.manaCost%></td>
+
+        </tr>
+        <%})%>
+    </table>
+    <%if(locals.user && user.username === deck.ownerName) {%>
+        <button onclick="window.location += '/patch'" style="width: 100%">Modify deck</button><br>
+        <button onclick="deleteDeck()" style="width: 100%">Delete deck</button>
+    <%}%>
+</div>
+
+<script>
+    function deleteDeck() {
+        const xhttp = new XMLHttpRequest()
+        let id = window.location.toString().substring(window.location.toString().lastIndexOf('/') + 1)
+        xhttp.open("DELETE", "/api/v1/decks/" + id, true)
+        xhttp.setRequestHeader("Content-Type", "application/json")
+        xhttp.setRequestHeader("x-access-token", "<%=token%>")
+        xhttp.onload = function() {
+            if(this.status !== 204) return alert(JSON.parse(this.responseText).error)
+            else {
+                window.location='/decks'
+            }
+        }
+        if (confirm("Are you sure you want to delete this deck?") === true) {
+            xhttp.send()
+        }
+    }
+</script>

@@ -1,0 +1,49 @@
+<div class="content justify">
+    <h1><%=tournament.location%></h1>
+    <p>Organiser: <%=tournament.username%></p>
+    <table style="width: 100%">
+    <%duels.forEach(e => {%>
+        <tr>
+            <td onclick="window.location='/decks/<%=e.decks[0]%>'" <%if(e.decks[0] === e.winner) {%> class="duel_winner" <%} else {%> class="duel_loser" <%}%>>
+                <%=e.details[0].ownerName%><br>
+                &ensp; <%=e.details[0].name%>
+            </td>
+            <td class="vs" style="height: 100%; vertical-align: bottom">
+                VS
+            </td>
+            <td onclick="window.location='/decks/<%=e.decks[1]%>'"  <%if(e.decks[1] === e.winner) {%> class="duel_winner" <%} else {%> class="duel_loser" <%}%>>
+                <%=e.details[1].ownerName%><br>
+                &ensp; <%=e.details[1].name%>
+            </td>
+            <%if(locals.user && tournament.username == user.username) {%>
+                <td onclick="window.location = '/duels/<%=e.id%>/patch'" style="cursor: pointer">
+                    Edit
+                </td>
+            <%}%>
+        </tr>
+    <%})%>
+    </table>
+    <%if(locals.user && tournament.username == user.username) {%>
+        <button onclick="window.location+='/duels/post'" style="width: 100%">Create duel</button>
+        <button onclick="window.location+='/patch'" style="width: 100%">Edit Tournament</button>
+        <button onclick="deleteTournament()" style="width: 100%">Delete Tournament</button>
+    <%}%>
+</div>
+<script>
+    function deleteTournament() {
+        const xhttp = new XMLHttpRequest()
+        let id = window.location.toString().substring(window.location.toString().lastIndexOf('/') + 1)
+        xhttp.open("DELETE", "/api/v1/tournaments/" + '<%=tournament.id%>', true)
+        xhttp.setRequestHeader("Content-Type", "application/json")
+        xhttp.setRequestHeader("x-access-token", "<%=token%>")
+        xhttp.onload = function() {
+            if(this.status !== 203) return alert(JSON.parse(this.responseText).error)
+            else {
+                window.location = '/tournaments'
+            }
+        }
+        if (confirm("Are you sure you want to delete this tournament?") === true) {
+            xhttp.send()
+        }
+    }
+</script>

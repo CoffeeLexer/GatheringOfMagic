@@ -34,7 +34,7 @@ router.post(/\//, utilities.verifyToken, utilities.adminGuard, async (req, res) 
     let test = utilities.structure_test(req.body, ["location"])
     if(test) return res.status(400).json({error: `Missing fields: ${test}`})
     let result = await db.query(`insert into tournament(fk_organiser, location) value ('${req.user.id}', '${req.body.location}')`)
-    res.setHeader(`Location`, `${req.protocol}://${req.get('host')}${req.originalUrl}${result.insertId}`)
+    res.setHeader(`Location`, `${req.protocol}://${req.get('host')}${req.originalUrl}/${result.insertId}`)
     return res.status(201).send(null)
 })
 

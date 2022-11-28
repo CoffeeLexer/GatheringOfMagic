@@ -4,11 +4,14 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
     "express": "^4.18.1",
     "jose": "^4.10.4",
     "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
     "mtgsdk": "^1.0.0",
     "mysql": "^2.18.1",
+    "node-fetch": "^3.3.0",
     "oauth2-server": "^3.1.1"
   }
 }

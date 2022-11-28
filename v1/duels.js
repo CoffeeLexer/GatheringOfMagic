@@ -148,7 +148,7 @@ router.patch(/\/\d+/, utilities.verifyToken, utilities.adminGuard, async (req, r
             let owner_2 = result[0].fk_user
             if(owner_1 == owner_2) return res.status(403).json({error: `Player can't duel against itself!`})
         }
-        if(!req.body.decks.includes(current_winner)) return res.status(403).json({error: `Winner must be selection from 'DECKS'`})
+        if(!req.body.decks.includes(current_winner) && current_winner != null) return res.status(403).json({error: `Winner must be selection from 'DECKS'`})
         await db.query(`delete from duel_deck where fk_duel = '${id}'`)
         await db.query(`insert into duel_deck(fk_duel, fk_deck) values ('${id}', '${req.body.decks[0]}'), ('${id}', '${req.body.decks[1]}')`)
     }

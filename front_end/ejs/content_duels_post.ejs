@@ -1,0 +1,64 @@
+<div class="content justify">
+        <label>First Fighter</label><br>
+        <select id="deck_select_0" style="width: 100%;">
+                <option value="empty">Select deck</option>
+                <%decks.forEach(e => {%>
+                <option id="deck_<%=e.id%>"><%=e.ownerName%>-<%=e.name%></option>
+                <%})%>
+        </select><br>
+        <label>Second Fighter</label><br>
+        <select id="deck_select_1" style="width: 100%;">
+                <option value="empty">Select deck</option>
+                <%decks.forEach(e => {%>
+                <option id="deck_<%=e.id%>"><%=e.ownerName%>-<%=e.name%></option>
+                <%})%>
+        </select><br>
+        <hr>
+        <p>Winner:</p>
+        <div>
+                <input type="radio" id="winner_0" name="winner" value="0">
+                <label for="winner_0">Player One</label>
+        </div>
+        <div>
+                <input type="radio" id="winner_1" name="winner" value="1">
+                <label for="winner_0">Player Two</label>
+        </div>
+        <button onclick="post()" style="width: 100%;">Create duel</button>
+</div>
+<script>
+        function post() {
+                const xhttp = new XMLHttpRequest()
+                xhttp.open("POST", "/api/v1/duels/", true)
+                xhttp.setRequestHeader("Content-Type", "application/json")
+                xhttp.setRequestHeader("x-access-token", "<%=token%>")
+                xhttp.onload = function() {
+                        if(this.status !== 201) return alert(JSON.parse(this.responseText).error)
+                        else {
+                                window.location.replace('/tournaments/' + window.location.toString().split('/')[4])
+                        }
+                }
+                let body = {}
+                body.tournament = window.location.toString().split('/')[4]
+
+
+                let s0 = document.getElementById('deck_select_0')
+                let s1 = document.getElementById('deck_select_1')
+                if(s0.selectedIndex == 0 || s1.selectedIndex ==0) return alert('Both decks must be selected to duel!')
+                let deck_0 = s0.options[s0.selectedIndex].id
+                let deck_1 = s1.options[s1.selectedIndex].id
+
+                let w0 = document.getElementById('winner_0')
+                let w1 = document.getElementById('winner_1')
+                let winner = -1;
+                if(w0.checked) winner = 0
+                if(w1.checked) winner = 1
+
+                body.decks = [
+                        parseInt(deck_0.toString().substring(deck_0.lastIndexOf('_') + 1)),
+                        parseInt(deck_1.toString().substring(deck_1.lastIndexOf('_') + 1))]
+
+                if(winner !== -1) body.winner = body.decks[winner]
+
+                xhttp.send(JSON.stringify(body))
+        }
+</script>

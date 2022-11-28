@@ -1,0 +1,85 @@
+<div class="content justify">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name"><br><br>
+        <div>
+                <h1>Selected cards</h1>
+                <table id="cards" style="width:100%">
+                        <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Country</th>
+                                <th></th>
+                        </tr>
+                </table>
+        </div>
+
+
+        <select id="cards_select" onchange="addCard()">
+                <option value="empty">Select card</option>
+                <%cards.forEach(e => {%>
+                        <option id="card_<%=e.id%>"><%=e.card.name%></option>
+                <%})%>
+        </select>
+        <button onclick="post()">Create</button>
+</div>
+
+<script>
+        function remove(el) {
+                let element = el;
+                element.parentElement.remove();
+        }
+        function addCard() {
+                const selector = document.getElementById('cards_select')
+                const unparsed = selector.options[selector.selectedIndex].id
+                const id = unparsed.toString().substring(unparsed.lastIndexOf('_') + 1)
+                selector.selectedIndex = 0
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                        const data = JSON.parse(this.responseText)
+                        document.getElementById("cards").innerHTML += `
+                        <tr class="card" id="card_${data.id}" style="border-bottom: #111111 solid 1px; cursor: pointer">
+                                <td onclick="window.open('/cards/${data.id}', '_blank')">${data.card.name}</td>
+                                <td onclick="window.open('/cards/${data.id}', '_blank')">${data.card.type}</td>
+                                <td onclick="window.open('/cards/${data.id}', '_blank')">${data.card.rarity}</td>
+                                <td onclick="remove(this)">Remove</td>
+                        </tr>`
+                }
+                xhttp.open("GET", "/api/v1/cards/" + id, true);
+                xhttp.send();
+        }
+        function post() {
+                const xhttp = new XMLHttpRequest()
+                xhttp.open("POST", "/api/v1/decks/", true)
+                xhttp.setRequestHeader("Content-Type", "application/json")
+                xhttp.setRequestHeader("x-access-token", "<%=token%>")
+                xhttp.onload = function() {
+                        if(this.status !== 201) return alert(JSON.parse(this.responseText).error)
+                        else {
+                                const l = this.getResponseHeader('location')
+                                const id = l.substring(l.lastIndexOf('/') + 1)
+                                window.location.replace('/decks/' + id)
+                        }
+                }
+                let body = {}
+                body.name = document.getElementById('name').value
+                if(body.name == "") return alert('Name is Empty')
+                const cards = document.getElementsByClassName("card")
+                let parsed = []
+                for(let e of cards) {
+                        const unparsed = e.id
+                        const id = unparsed.toString().substring(unparsed.lastIndexOf('_') + 1)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                        parsed.push(id)
+                }
+                body.cards = parsed
+                xhttp.send(JSON.stringify(body))
+        }
+</script>

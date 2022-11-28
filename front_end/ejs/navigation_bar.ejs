@@ -1,0 +1,18 @@
+<ul>
+    <div class="left">
+        <li class="nav" <%if(nav === 'tournaments'){%>style="background-color: #111;" <%}%> ><a href="/tournaments">Tournaments</a></li>
+        <li class="nav" <%if(nav === 'decks'){%>style="background-color: #111;" <%}%> ><a href="/decks">Decks</a></li>
+        <li class="nav" <%if(nav === 'cards'){%>style="background-color: #111;" <%}%> ><a href="/cards">Cards</a></li>
+    </div>
+    <div class="right">
+        <%if(locals.user) {%>
+        <li class="nav">
+            <form id="logout_form" method="POST" action="/sessions?_method=DELETE">
+                <a href="#" onclick="document.getElementById('logout_form').submit()"><%=locals.user.username%> - Logout</a>
+            </form>
+        </li>
+        <%}else{%>
+            <li class="nav" <%if(nav === 'sessions'){%>style="background-color: #111;" <%}%>><a href="/sessions">Login</a></li>
+        <%}%>
+    </div>
+</ul>

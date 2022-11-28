@@ -1,0 +1,44 @@
+<div class="content justify">
+    <h1><%=card.name%></h1>
+    <hr>
+    <div>
+        <table style="width: 100%">
+            <tr>
+                <td>
+                    <%if(card.imageUrl) {%>
+                        <img src="<%=card.imageUrl%>" alt="Cards art" style="float: left ;border-radius: 12px; max-width: 200px">
+                    <%}else{%>
+                        <img src="/assets/404.png" alt="Cards art" style="float: left ;border-radius: 12px; max-width: 200px">
+                    <%}%>
+                    <p>Cost - <%=card.manaCost%></p>
+                    <p>Color - <%=card.colorIdentity%></p>
+                    <p>Types - <%=card.types%></p>
+                    <p>Subtypes - <%=card.subtypes%></p>
+                    <p>Rarity - <%=card.rarity%></p>
+                    <p>Set - <%=card.setName%></p>
+                    <p>Text - <%=card.text%></p>
+                    <p>Flavor - <%=card.flavor%></p>
+                    <p>Artist - <%=card.artist%></p>
+                    <p>Power - <%=card.power%></p>
+                    <p>Toughness - <%=card.toughness%></p>
+                    <p>Layout - <%=card.layout%></p>
+                    <p>ID - <%=card.id%></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <h2>Legalities</h2>
+    <table style="width: 100%">
+        <tr>
+            <th style="border-bottom: solid white 1px">Format</th>
+            <th style="border-bottom: solid white 1px">Legality</th>
+        </tr>
+        <%card.legalities.forEach(e => {%>
+        <tr>
+            <td><%=e.format%></td>
+            <td><%=e.legality%></td>
+        </tr>
+        <%})%>
+    </table>
+</div>

@@ -1,0 +1,234 @@
+* {
+    box-sizing: border-box;
+}
+body, html {
+    min-height: 100%;
+    margin: auto;
+}
+table {
+    width: 100%;
+}
+button {
+    width: 100%;
+    border-color: slateblue;
+    background: slateblue;
+    color: white;
+}
+tr {
+    width: 100%;
+}
+input {
+    width: 100%;
+    border-color: slateblue;
+    background: none;
+    color: white;
+}
+select {
+    width: 100%;
+    border-color: slateblue;
+    background: none;
+    color: white;
+}
+option {
+    background-color: slateblue;
+}
+body {
+    background-image: url("/assets/Background.jpg");
+    background-size: cover;
+    color: slateblue;
+    background-color: #3C3F41;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 0;
+    margin: 0;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 8px 20px;
+    text-decoration: none;
+}
+li a:hover {
+    background-color: #111;
+}
+a .active {
+    background-color: chocolate;
+}
+.container {
+    max-width: 800px;
+    margin: auto;
+    min-height: 100%;
+    border: solid 1px #ffffff;
+}
+.header {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.navigation {
+
+}
+.content {
+    border: 1px solid #243a65;
+    /*margin: 10px;*/
+    padding: 10px;
+    backdrop-filter: grayscale(100%) brightness(40%) blur(10px)
+}
+#header {
+    display: block;
+    margin: 0;
+    padding: 0;
+    align-content: center;
+    overflow: hidden;
+    object-fit: cover;
+    height: 100px;
+    width: 100%;
+    aspect-ratio: auto;
+}
+.justify {
+    text-align: justify;
+    text-justify: inter-word;
+}
+.footer {
+    font-weight: bolder;
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+a.empty, a:visited.empty, a:link.empty {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1 {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    display:inline-block;
+    padding: 0;
+    margin: 0;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+.mapouter {
+    position:relative;
+    text-align:right;
+    height:500px;
+    width:100%;
+}
+.gmap_canvas {
+    overflow:hidden;
+    background:none!important;
+    height:500px;
+    width:100%;
+}
+
+.vs {
+    width: 20%;
+    float: left;
+
+    --border-width: 3px;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Lato, sans-serif;
+    text-transform: uppercase;
+    color: white;
+    border-radius: var(--border-width);
+}
+
+.duel_loser {
+    float: left;
+    width: 40%;
+
+    --border-width: 3px;
+    border: solid 3px #222;
+    background: #222;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Lato, sans-serif;
+    text-transform: uppercase;
+    color: white;
+    border-radius: var(--border-width);
+}
+
+.duel_winner {
+    float: left;
+    width: 40%;
+
+    --border-width: 3px;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Lato, sans-serif;
+    text-transform: uppercase;
+    color: white;
+    border-radius: var(--border-width);
+}
+.duel_winner:after {
+    position: absolute;
+    content: "";
+    top: calc(-1 * var(--border-width));
+    left: calc(-1 * var(--border-width));
+    z-index: -1;
+    width: calc(100% + var(--border-width) * 2);
+    height: calc(100% + var(--border-width) * 2);
+    background: linear-gradient(
+         45deg,
+         hsl(236, 100%, 7%),
+         hsl(255, 83%, 37%)
+    );
+    background-size: 300% 300%;
+    background-position: 0 50%;
+    border-radius: calc(2 * var(--border-width));
+    animation: moveGradient 4s alternate infinite;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+@keyframes moveGradient {
+    50% {
+        background-position: 100% 50%;
+    }
+}
+@media only screen and (max-width: 768px) {
+    body {
+        background-image: url("/assets/Vertical.png");
+        background-size: cover;
+        background-attachment: scroll;
+    }
+    .nav {
+        width: 100%;
+    }
+    .left {
+        float: none;
+    }
+    .right {
+        float: none;
+    }
+}

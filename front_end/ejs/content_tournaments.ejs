@@ -1,0 +1,21 @@
+<div class="content justify">
+
+        <table style="width:100%">
+                <tr>
+                        <th>Organiser</th>
+                        <th>Location</th>
+                        <th>Duel Amount</th>
+                </tr>
+    <% tournaments.forEach(e => {%>
+                <tr onclick="window.location='tournaments/<%=e.id%>'" style="border-bottom: #111111 solid 1px; cursor: pointer">
+                        <td><%=e.username%></td>
+                        <td><%=e.location%></td>
+                        <td><%=e.duels.length%></td>
+                </tr>
+    <%})%>
+        </table>
+
+        <%if(locals.user && user.privilege === 1) {%>
+                <button onclick="window.location='/tournaments/post'" style="width: 100%">Create tournament</button>
+        <%}%>
+</div>

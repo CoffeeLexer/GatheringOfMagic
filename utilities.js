@@ -60,8 +60,19 @@ function adminGuard(req, res, next) {
     return next()
 }
 
+function parseToken(req, res, next) {
+    const token = req.cookies["x-access-token"]
+    try {
+        req.user = jwt.verify(token, process.env.TOKEN_KEY, {algorithms: ['HS512']})
+        req.token = token
+    }
+    catch (e) {
+    }
+    return next()
+}
 
 module.exports = {
+    parseToken,
     adminGuard,
     hash_password,
     structure_test,

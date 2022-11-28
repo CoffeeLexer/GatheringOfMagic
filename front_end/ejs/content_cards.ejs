@@ -1,0 +1,16 @@
+<div class="content justify">
+        <table style="width:100%">
+                <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Country</th>
+                </tr>
+    <% cards.forEach(e => {%>
+                <tr onclick="window.location='cards/<%=e.id%>'" style="border-bottom: #111111 solid 1px; cursor: pointer">
+                        <td><%=e.card.name%></td>
+                        <td><%=e.card.type%></td>
+                        <td><%=e.card.rarity%></td>
+                </tr>
+    <%})%>
+        </table>
+</div>

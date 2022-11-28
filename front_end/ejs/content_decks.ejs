@@ -1,0 +1,19 @@
+<div class="content justify">
+        <table style="width:100%">
+                <tr>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Deck Size</th>
+                </tr>
+    <% decks.forEach(e => {%>
+                <tr onclick="window.location='decks/<%=e.id%>'" style="border-bottom: #111111 solid 1px; cursor: pointer">
+                        <td><%=e.name%></td>
+                        <td><%=e.ownerName%></td>
+                        <td><%=e.cards.length%></td>
+                </tr>
+    <%})%>
+        </table>
+        <%if(locals.user) {%>
+                <button onclick="window.location='/decks/post'" style="width: 100%">Create deck</button>
+        <%}%>
+</div>

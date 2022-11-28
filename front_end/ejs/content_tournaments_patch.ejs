@@ -1,0 +1,23 @@
+<div class="content justify">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" value="<%=current.location%>"><br><br>
+        <button onclick="post()">Update tournament</button>
+</div>
+<script>
+        function post() {
+                const xhttp = new XMLHttpRequest()
+                xhttp.open("PATCH", "/api/v1/tournaments/" + '<%=current.id%>', true)
+                xhttp.setRequestHeader("Content-Type", "application/json")
+                xhttp.setRequestHeader("x-access-token", "<%=token%>")
+                xhttp.onload = function() {
+                        if(this.status !== 204) return alert(JSON.parse(this.responseText).error)
+                        else {
+                                window.location = '/tournaments/<%=current.id%>'
+                        }
+                }
+                let body = {}
+                body.location = document.getElementById('location').value
+                if(body.location == "") return alert('Location is Empty')
+                xhttp.send(JSON.stringify(body))
+        }
+</script>

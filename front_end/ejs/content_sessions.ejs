@@ -1,0 +1,16 @@
+<div class="content justify">
+    <% if(locals.error) { %>
+        <p><%= error %></p>
+    <% } %>
+    <form action="sessions" method="post">
+        <div class="login_container">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" required>
+            <br>
+            <labe for="password"><b>Password</b></labe>
+            <input type="password" placeholder="Enter Password" name="password" required>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    <button onclick="window.location = 'users'">Register</button>
+</div>
