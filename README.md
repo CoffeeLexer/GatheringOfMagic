@@ -93,7 +93,92 @@ These are wireframes which define layout for all cases
       <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck List Logged.png">
       </picture>
       </p>
-
+  - `Single`
+    - `Owner`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck Single Owner.png">
+      </picture>
+      </p>
+    - `Non-Owner`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck Single.png">
+      </picture>
+      </p>
+  - `Update` Accessible by owner of the deck.
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck Update.png">
+    </picture>
+    </p>
+- `Duels`
+  - `Create` Requires admin privileges and is accessible through `Tournament Single` 
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Duel Create.png">
+    </picture>
+    </p>
+  - `Update` Requires admin privileges and is accessible through `Tournament Single`
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Duel Update.png">
+    </picture>
+    </p>
+- `Home`
+  - `Guest`
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Home.png">
+    </picture>
+    </p>
+  - `User` or `Admin`
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Home Logged in.png">
+    </picture>
+    </p>
+- `Session`
+  - `Login`
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Login.png">
+    </picture>
+    </p>
+  - `Register`
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Register.png">
+    </picture>
+    </p>
+- `Tournament`
+  - `List`
+    - `Admin`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Tournament Admin.png">
+      </picture>
+      </p>
+    - `Non-Admin`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Tournament List.png">
+      </picture>
+      </p>
+  - `Single`
+    - `Owner`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Tournament Single Owner.png">
+      </picture>
+      </p>
+    - `Non-Owner`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Tournament Single.png">
+      </picture>
+      </p>
+    
 
 # Hierarchy
 - `Guest` can access only `GET` methods
@@ -127,7 +212,7 @@ These are wireframes which define layout for all cases
     - `404`
       - Owner of deck not found
     - `POST` example body
-    ```
+    ```json
     {
         "name": "Storm From Within8",
         "cards": [
