@@ -2,7 +2,7 @@
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/KTU%20white.png">
         <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/KTU%20black.png">
-        <img width="50%" alt="KTU LOGO" src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
+        <img width="50%" alt="KTU LOGO" src="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/KTU%20white.png">
     </picture>
 </p>
 
@@ -44,7 +44,7 @@ players can create/modify decks and administrator creates/modifies tournaments.
   - Delete duel
 ## Technological specification
 System consist of
-- Front-End - generated raw html from server
+- Front-End - generated raw html files within server using EJS engine
 - Back-End - Node.js
 - Database - MySQL
 - MTG card API - https://api.magicthegathering.io
@@ -57,6 +57,43 @@ API. To access system you need to use interned browser and server will return ra
         <img width="50%" alt="Architectures structure" src="https://raw.githubusercontent.com/T4rt4ru5/GatheringOfMagic/main/docs/Architecture.png">
     </picture>
 </p>
+
+# Wireframes
+These are wireframes which define layout for all cases
+- `Cards` 
+  - `List`
+      <p align="center">
+          <picture>
+              <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Cards List.png">
+          </picture>
+      </p>
+  - `Single`
+      <p align="center">
+          <picture>
+              <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Cards Single.png">
+          </picture>
+      </p>
+- `Deck`
+  - `Create` User privileges required
+    <p align="center">
+    <picture>
+    <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck Create.png">
+    </picture>
+    </p>
+  - `List`
+    - `Guest`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck List.png">
+      </picture>
+      </p>
+    - `User` or `Admin`
+      <p align="center">
+      <picture>
+      <img width="50%" alt="Architectures structure" src="./docs/Wireframes/Deck List Logged.png">
+      </picture>
+      </p>
+
 
 # Hierarchy
 - `Guest` can access only `GET` methods
