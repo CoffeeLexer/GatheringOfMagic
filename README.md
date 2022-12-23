@@ -634,3 +634,9 @@ These are wireframes which define layout for all cases
     - `DELETE` example
       - `Request` `DELETE` `api/v1/tournaments/1`
       - `Response`: Empty body
+# Conclusions
+Creating API is great if task is direct at solving problem. For big systems it is necessary to use API as work will get
+out of hand without structure. In general creating API isn't exactly to hard, however, developing on cloud is something
+else. Cloud service providers like money. Therefore, if you are new on cloud development and don't have free trial you
+will lose money fast. Therefore, good practise is to learn container paradigm (example Docker) as most of the cloud 
+providers use mainly containers. Knowing them beforehand will minimize cost of developmental start-up.
